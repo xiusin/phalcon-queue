@@ -1,6 +1,6 @@
 <?php
 
-namespace Xiusin\PhalconQueue\Adapters;
+namespace Xiusin\PhalconQueue\Adapter;
 
 use AMQPChannel;
 use AMQPChannelException;

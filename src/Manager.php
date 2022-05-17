@@ -2,9 +2,13 @@
 
 namespace Xiusin\PhalconQueue;
 
+use app\components\queue\adapter\BeanstalkdQueue;
+use app\components\queue\adapter\RedisQueue;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\Injectable;
 use Throwable;
+use Xiusin\PhalconQueue\Adapter\AmqpQueue;
+use Xiusin\PhalconQueue\Adapter\DatabaseQueue;
 
 class Manager extends Injectable
 {
@@ -13,13 +17,25 @@ class Manager extends Injectable
      */
     protected array $adapters = [];
 
-    protected array $alias = [];
+    protected array $config = [];
 
-    public function __construct(DiInterface $di = null)
+    protected array $alias = [
+        'beanstalkd' => BeanstalkdQueue::class,
+        "database" => DatabaseQueue::class,
+        'amqp' => AmqpQueue::class,
+        'redis' => RedisQueue::class,
+    ];
+
+    public function __construct(array $config = [], DiInterface $di = null)
     {
         if ($di) {
             $this->di = $di;
         }
+        if (!$config) {
+            $config = require __DIR__ . '/queue.php';
+        }
+
+        $this->setConfig($config);
     }
 
     public static function serviceName(): string
@@ -35,6 +51,11 @@ class Manager extends Injectable
     public function connected(?string $name = null): bool
     {
         return isset($this->adapters[$name ?: $this->getDefaultAdapter()]);
+    }
+
+    public function setConfig(array $config)
+    {
+        $this->di->getShared('config')->set('queue', $config);
     }
 
     private function getDefaultAdapter()

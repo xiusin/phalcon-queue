@@ -1,6 +1,6 @@
 <?php
 
-namespace app\components\queue\adapters;
+namespace app\components\queue\adapter;
 
 use Pheanstalk\Contract\PheanstalkInterface;
 use Pheanstalk\Pheanstalk;

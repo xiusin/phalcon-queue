@@ -1,14 +1,14 @@
 <?php
 
-namespace app\components\queue\adapters;
+namespace Xiusin\PhalconQueue\Adapter;
 
-use app\components\queue\AbstractAdapter;
-use app\components\queue\Job;
-use app\components\queue\QueueException;
 use Phalcon\Db\Adapter\AdapterInterface;
 use Phalcon\Db\Column;
 use Phalcon\Db\Index;
 use Throwable;
+use Xiusin\PhalconQueue\AbstractAdapter;
+use Xiusin\PhalconQueue\Job;
+use Xiusin\PhalconQueue\QueueException;
 
 class DatabaseQueue extends AbstractAdapter
 {
