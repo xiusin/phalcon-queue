@@ -9,7 +9,13 @@ return [
         'connect_timeout' => 30
     ],
     "redis" => [
-
+        'unix' => '',
+        'host' => '127.0.0.1',
+        'port' => 6379,
+        'connectTimeout' => 2.5,
+        'auth' => [],
+        'ssl' => ['verify_peer' => false],
+        'database' => 0
     ],
     "amqp" => [
 
