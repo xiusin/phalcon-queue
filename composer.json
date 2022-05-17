@@ -1,0 +1,30 @@
+{
+    "name": "xiusin/phalcon-queue",
+    "description": "一个基于phalcon框架的队列组件",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Xiusin\\PhalconQueue\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "",
+            "email": "chenchengbin92@gmail.com"
+        }
+    ],
+    "require": {
+        "ext-phalcon": ">=4",
+        "pda/pheanstalk": "v4.x-dev"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer/"
+        },
+        {
+            "type": "composer",
+            "url": "https://packagist.org/"
+        }
+    ]
+}
