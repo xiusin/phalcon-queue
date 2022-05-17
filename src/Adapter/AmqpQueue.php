@@ -8,9 +8,10 @@ use AMQPConnection;
 use AMQPConnectionException;
 use AMQPExchange;
 use AMQPExchangeException;
+use AMQPQueueException;
 use Throwable;
 use Xiusin\PhalconQueue\AbstractAdapter;
-use Xiusin\PhalconQueue\QueueException;
+use Xiusin\PhalconQueue\Job;
 
 class AmqpQueue extends AbstractAdapter
 {
@@ -26,9 +27,8 @@ class AmqpQueue extends AbstractAdapter
 
     /**
      * @throws AMQPConnectionException
-     * @throws QueueException
      * @throws AMQPExchangeException
-     * @throws AMQPChannelException
+     * @throws AMQPChannelException|AMQPQueueException
      */
     public function __construct(array $config)
     {
@@ -41,7 +41,7 @@ class AmqpQueue extends AbstractAdapter
         $this->channel = new AMQPChannel($this->connection);
 
         $this->exchange = new AMQPExchange($this->channel);
-        $this->exchange->setName(config('queue.amqp.exchange')); // exchange name
+        $this->exchange->setName($this->getDI()->getShared('config')->path('queue.amqp.exchange')); // exchange name
         $this->exchange->setType(AMQP_EX_TYPE_DIRECT); // direct exchange type
         $this->exchange->setFlags(AMQP_DURABLE);  // the exchange will survive server restarts
         $this->exchange->declareExchange(); // declare the exchange
@@ -62,7 +62,7 @@ class AmqpQueue extends AbstractAdapter
             $queueInfo = $this->queue->get();
             $body = $queueInfo->getBody();
 
-            $amqpQueue->ack($queueInfo->getDeliveryTag()); // acknowledge the message
+            $this->queue->ack($queueInfo->getDeliveryTag()); // acknowledge the message
         }
 
 

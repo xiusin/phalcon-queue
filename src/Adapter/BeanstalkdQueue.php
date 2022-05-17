@@ -6,10 +6,11 @@ use Pheanstalk\Contract\PheanstalkInterface;
 use Pheanstalk\Pheanstalk;
 use Throwable;
 use Xiusin\PhalconQueue\AbstractAdapter;
+use Xiusin\PhalconQueue\Job;
 
 class BeanstalkdQueue extends AbstractAdapter
 {
-    protected $connection;
+    protected Pheanstalk $connection;
 
     public function __construct(array $config)
     {

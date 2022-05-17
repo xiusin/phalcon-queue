@@ -31,8 +31,8 @@ class Manager extends Injectable
         if ($di) {
             $this->di = $di;
         }
-        if (!$config) {
-            $config = require __DIR__ . '/queue.php';
+        if (!$config) { // 如果不传, 则默认读取目录内配置文件
+            $config = require __DIR__ . '/config.php';
         }
 
         $this->setConfig($config);
