@@ -61,13 +61,17 @@ class AmqpQueue extends AbstractAdapter
         while (true) {
             $queueInfo = $this->queue->get();
             $body = $queueInfo->getBody();
-
             $this->queue->ack($queueInfo->getDeliveryTag()); // acknowledge the message
         }
 
 
     }
 
+    /**
+     * @throws AMQPExchangeException
+     * @throws AMQPChannelException
+     * @throws AMQPConnectionException
+     */
     public function send(Job $job)
     {
         $this->exchange->publish(serialize($job), $job->getQueueName());

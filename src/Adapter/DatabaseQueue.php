@@ -104,7 +104,7 @@ class DatabaseQueue extends AbstractAdapter
                     }
                     $this->connection->delete($this->table, "id = ?", [$job['id']]);
                 } else {
-                    usleep(200);
+                    usleep($this->config['interval'] ?? 200);
                 }
 
                 $this->connection->commit();

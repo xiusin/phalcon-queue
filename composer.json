@@ -19,8 +19,7 @@
     "require-dev": {
         "pda/pheanstalk": "v4.x-dev",
         "ext-amqp": "*",
-        "ext-pdo": "*",
-        "ext-redis": "*"
+        "ext-pdo": "*"
     },
     "repositories": [
         {
