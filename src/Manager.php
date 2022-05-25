@@ -3,12 +3,13 @@
 namespace Xiusin\PhalconQueue;
 
 use app\components\queue\adapter\BeanstalkdQueue;
-use app\components\queue\adapter\RedisQueue;
 use Phalcon\Di\DiInterface;
 use Phalcon\Di\Injectable;
 use Throwable;
 use Xiusin\PhalconQueue\Adapter\AmqpQueue;
 use Xiusin\PhalconQueue\Adapter\DatabaseQueue;
+use Xiusin\PhalconQueue\Adapter\NullQueue;
+use Xiusin\PhalconQueue\Adapter\SyncQueue;
 
 class Manager extends Injectable
 {
@@ -23,7 +24,8 @@ class Manager extends Injectable
         'beanstalkd' => BeanstalkdQueue::class,
         "database" => DatabaseQueue::class,
         'amqp' => AmqpQueue::class,
-        'redis' => RedisQueue::class,
+        'sync' => SyncQueue::class,
+        'null' => NullQueue::class
     ];
 
     public function __construct(array $config = [], DiInterface $di = null)
@@ -90,7 +92,7 @@ class Manager extends Injectable
         if (!isset($cfg['adapter'])) {
             $cfg['adapter'] = $this->alias[$name] ?? '';
         }
-        if(!$cfg['adapter']) {
+        if (!$cfg['adapter']) {
             throw new QueueException("unsupported queue adapter");
         }
 

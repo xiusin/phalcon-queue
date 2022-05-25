@@ -2,16 +2,22 @@
 
 
 return [
-    'default' => "database",
-    "beanstalkd" => [
+    'default' => 'database',
+    'beanstalkd' => [
         'host' => '127.0.0.1',
         'port' => '11300',
         'connect_timeout' => 30
     ],
-    "amqp" => [
+    'amqp' => [
 
     ],
-    "database" => [
+    'sync' => [
+
+    ],
+    'null' => [
+
+    ],
+    'database' => [
         'connection' => 'db',
         'table' => 'jobs',
         'failed_table' => 'failed_jobs',
