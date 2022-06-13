@@ -90,7 +90,7 @@ class DatabaseQueue extends AbstractAdapter
             $this->connection->begin();
             try {
                 $job = $this->connection->query(
-                    "SELECT * FROM " . $this->table . " WHERE `queue` = ? and `available_at` <= ? ORDER BY id ASC LIMIT 1 FOR UPDATE",
+                    "SELECT * FROM " . $this->table . " WHERE `queue` = ? and `available_at` <= ? ORDER BY id ASC LIMIT 1", //  FOR UPDATE
                     [$queue, time()]
                 )->fetch();
 
