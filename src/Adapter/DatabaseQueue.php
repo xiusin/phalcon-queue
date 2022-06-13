@@ -87,31 +87,31 @@ class DatabaseQueue extends AbstractAdapter
     public function consume(string $queue)
     {
         while (true) {
-            $this->connection->begin();
-            try {
-                $job = $this->connection->query(
-                    "SELECT * FROM " . $this->table . " WHERE `queue` = ? and `available_at` <= ? ORDER BY id ASC LIMIT 1", //  FOR UPDATE
-                    [$queue, time()]
-                )->fetch();
+//            $this->connection->begin();
+//            try {
+            $job = $this->connection->query(
+                "SELECT * FROM " . $this->table . " WHERE `queue` = ? and `available_at` <= ? ORDER BY id ASC LIMIT 1", //  FOR UPDATE
+                [$queue, time()]
+            )->fetch();
 
-                if ($job) {
-                    $payload = null;
-                    try {
-                        $payload = unserialize($job['payload']);
-                        $payload->handle();
-                    } catch (Throwable $e) {
-                        $this->pushFailedJob($payload, $e);
-                    }
-                    $this->connection->delete($this->table, "id = ?", [$job['id']]);
-                } else {
-                    usleep($this->config['interval'] ?? 200);
+            if ($job) {
+                $payload = null;
+                try {
+                    $payload = unserialize($job['payload']);
+                    $payload->handle();
+                } catch (Throwable $e) {
+                    $this->pushFailedJob($payload, $e);
                 }
-
-                $this->connection->commit();
-            } catch (Throwable $exception) {
-                $this->connection->rollback();
-                throw $exception;
+                $this->connection->delete($this->table, "id = ?", [$job['id']]);
+            } else {
+                usleep($this->config['interval'] ?? 200);
             }
+
+//                $this->connection->commit();
+//            } catch (Throwable $exception) {
+//                $this->connection->rollback();
+//                throw $exception;
+//            }
         }
     }
 
