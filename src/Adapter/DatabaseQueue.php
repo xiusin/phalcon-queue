@@ -78,7 +78,6 @@ class DatabaseQueue extends AbstractAdapter
                 throw new QueueException('create table ' . $this->table . ' failed');
             }
         }
-
     }
 
     /**
@@ -87,8 +86,6 @@ class DatabaseQueue extends AbstractAdapter
     public function consume(string $queue)
     {
         while (true) {
-//            $this->connection->begin();
-//            try {
             $job = $this->connection->query(
                 "SELECT * FROM " . $this->table . " WHERE `queue` = ? and `available_at` <= ? ORDER BY id ASC LIMIT 1", //  FOR UPDATE
                 [$queue, time()]
@@ -100,18 +97,15 @@ class DatabaseQueue extends AbstractAdapter
                     $payload = unserialize($job['payload']);
                     $payload->handle();
                 } catch (Throwable $e) {
-                    $this->pushFailedJob($payload, $e);
+                    try {
+                        $this->pushFailedJob($payload, $e);
+                    } catch (Throwable $e) {
+                    }
                 }
                 $this->connection->delete($this->table, "id = ?", [$job['id']]);
             } else {
                 usleep($this->config['interval'] ?? 200);
             }
-
-//                $this->connection->commit();
-//            } catch (Throwable $exception) {
-//                $this->connection->rollback();
-//                throw $exception;
-//            }
         }
     }
 
@@ -125,7 +119,8 @@ class DatabaseQueue extends AbstractAdapter
                 null,
                 time() + $job->getDelay(),
                 time()
-            ], [
+            ],
+            [
                 'queue',
                 'payload',
                 'reserved_at',
