@@ -85,6 +85,7 @@ class DatabaseQueue extends AbstractAdapter
      */
     public function consume(string $queue)
     {
+        ini_set('memory_limit', '256M');
         while (true) {
             $job = $this->connection->query(
                 "SELECT * FROM " . $this->table . " WHERE `queue` = ? and `available_at` <= ? ORDER BY id ASC LIMIT 1", //  FOR UPDATE
@@ -102,6 +103,7 @@ class DatabaseQueue extends AbstractAdapter
                     } catch (Throwable $e) {
                     }
                 }
+                unset($payload);
                 $this->connection->delete($this->table, "id = ?", [$job['id']]);
             } else {
                 usleep($this->config['interval'] ?? 200);
